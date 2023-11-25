@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
@@ -11,7 +12,11 @@ from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserN
 from service.api.keys import API_KEYS
 from service.log import app_logger
 
-userknn_model = load("models/user_knn.pkl")
+MODEL_PATH = "models/user_knn.pkl"
+if os.path.exists(MODEL_PATH):
+    userknn_model = load(MODEL_PATH)
+else:
+    userknn_model = None
 
 
 class RecoResponse(BaseModel):
