@@ -9,6 +9,8 @@ from rectools.models import PopularModel
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
+SIMILARITY_POPULAR = 0.1
+
 class UserKnn():
     """Class for fit-perdict UserKNN model 
        based on ItemKNN model from implicit.nearest_neighbours
@@ -19,6 +21,7 @@ class UserKnn():
         self.model = model
         self.popular_model = popular_model
         self.is_fitted = False
+
         
     def get_mappings(self, train):
         self.users_inv_mapping = dict(enumerate(train['user_id'].unique()))
@@ -102,7 +105,7 @@ class UserKnn():
         )
         
         # Get popular recommendations for ALL users
-        cold_recs = pd.DataFrame({'user_id':test.user_id, 'similar_user_id':-1, 'sim':0.1}) # similarity score is low to lower popular recommendations
+        cold_recs = pd.DataFrame({'user_id':test.user_id, 'similar_user_id':-1, 'sim':SIMILARITY_POPULAR}) # similarity score is low to lower popular recommendations
         cold_recs['item_id'] = cold_recs.apply(lambda _: self.get_popular(N_recs=N_recs), axis=1)
 
         # Get recommendations for hot users
