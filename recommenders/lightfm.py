@@ -12,12 +12,14 @@ if os.path.exists(MODEL_PATH):
 
 
 all_recos = pd.DataFrame([])
+all_users = []
 RECOS_PATH = "recommenders/offline/LightFM_warp_8.csv"
 if os.path.exists(RECOS_PATH):
     all_recos = pd.read_csv(RECOS_PATH)
+    all_users = all_recos[Columns.User].unique()
 
 
-all_users = all_recos[Columns.User].unique()
+
 popular_recos = pd.read_csv(os.path.join('kion_train', "popular_50.csv")).item_id.tolist()
 
 
