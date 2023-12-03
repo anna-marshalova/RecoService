@@ -1,10 +1,10 @@
-import os
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 
+from recommenders.lightfm import get_offline_recos_lightfm, get_recos_lightfm_ann
 from recommenders.model_loader import load
 from recommenders.model_names import ModelName
 from recommenders.popular import get_popular
@@ -12,11 +12,7 @@ from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserN
 from service.api.keys import API_KEYS
 from service.log import app_logger
 
-MODEL_PATH = "models/user_knn.pkl"
-if os.path.exists(MODEL_PATH):
-    userknn_model = load(MODEL_PATH)
-else:
-    userknn_model = None
+userknn_model = load("models/user_knn.pkl")
 
 
 class RecoResponse(BaseModel):
@@ -57,6 +53,10 @@ async def get_reco(
         reco = get_popular(k_recs)
     elif model_name is ModelName.userknn:
         reco = userknn_model.recommend(user_id, N_recs=k_recs)
+    elif model_name is ModelName.lightfm:
+        reco = get_offline_recos_lightfm(user_id)
+    elif model_name is ModelName.lightfm_ann:
+        reco = get_recos_lightfm_ann(k_recs)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 

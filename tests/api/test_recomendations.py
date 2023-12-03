@@ -1,5 +1,6 @@
 import os
 
+from recommenders.lightfm import get_offline_recos_lightfm, get_recos_lightfm_ann
 from recommenders.model_loader import load
 from recommenders.popular import get_popular
 
@@ -14,10 +15,34 @@ def test_popular():
 def test_userknn():
     MODEL_PATH = "models/user_knn.pkl"
     if os.path.exists(MODEL_PATH):
-        userknn_model = load("models/user_knn.pkl")
+        userknn_model = load(MODEL_PATH)
         user_id = 0
         k_recs = 10
         reco = userknn_model.recommend(user_id, N_recs=k_recs)
+        assert isinstance(reco, list)
+        assert len(reco) == k_recs
+    else:
+        pass
+
+
+def test_lightfm_ann():
+    MODEL_PATH = "models/ANN_LightFM_warp_8.pkl"
+    if os.path.exists(MODEL_PATH):
+        user_id = 0
+        k_recs = 10
+        reco = get_recos_lightfm_ann(user_id, k_recs=k_recs)
+        assert isinstance(reco, list)
+        assert len(reco) == k_recs
+    else:
+        pass
+
+
+def test_offline_lightfm():
+    RECOS_PATH = "recommenders/offline/LightFM_warp_8.csv"
+    if os.path.exists(RECOS_PATH):
+        user_id = 0
+        k_recs = 10
+        reco = get_offline_recos_lightfm(user_id)
         assert isinstance(reco, list)
         assert len(reco) == k_recs
     else:
