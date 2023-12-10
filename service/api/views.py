@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from recommenders.lightfm import get_offline_recos_lightfm, get_recos_lightfm_ann
 from recommenders.model_loader import load
 from recommenders.model_names import ModelName
+from recommenders.neural_recommenders import get_recos_AE, get_recos_multi_VAE
 from recommenders.popular import get_popular
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
@@ -56,7 +57,11 @@ async def get_reco(
     elif model_name is ModelName.lightfm:
         reco = get_offline_recos_lightfm(user_id)
     elif model_name is ModelName.lightfm_ann:
-        reco = get_recos_lightfm_ann(k_recs)
+        reco = get_recos_lightfm_ann(user_id, k_recs=k_recs)
+    elif model_name is ModelName.autoencoder:
+        reco = get_recos_AE(user_id, k_recs=k_recs)
+    elif model_name is ModelName.multi_vae:
+        reco = get_recos_multi_VAE(user_id, k_recs=k_recs)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 

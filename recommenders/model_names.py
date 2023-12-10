@@ -6,4 +6,6 @@ class ModelName(str, Enum):
     userknn = "userknn"
     lightfm = "lightfm"
     lightfm_ann = "lightfm_ann"
+    autoencoder = "autoencoder"
+    multi_vae = "multi_vae"
     other = "unknown"
