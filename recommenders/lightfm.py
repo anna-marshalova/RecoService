@@ -1,6 +1,8 @@
 import os
 import pickle
+
 import pandas as pd
+
 from rectools import Columns
 from rectools.tools import UserToItemAnnRecommender
 from recommenders.popular import get_popular
@@ -23,11 +25,11 @@ if os.path.exists(RECOS_PATH):
 popular_recos = pd.read_csv(os.path.join('kion_train', "popular_50.csv")).item_id.tolist()
 
 
-def get_offline_recos_lightfm(user_id):
+def get_offline_recos_lightfm(user_id, k_recs=10):
     if user_id in all_users:
         user_recos = all_recos[all_recos[Columns.User] == user_id][Columns.Item]
-        return user_recos.tolist()
-    return popular_recos[:10]
+        return user_recos.tolist()[:k_recs]
+    return popular_recos[:k_recs]
 
 def get_recos_lightfm_ann(user_id, k_recs=10):
     if user_id in lightfm_ann.user_id_map.external_ids:
