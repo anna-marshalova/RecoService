@@ -7,7 +7,7 @@ from recommenders.model_loader import load
 from recommenders.neural_recommenders import get_recos_AE, get_recos_multi_VAE
 from recommenders.popular import get_popular
 
-with open("recommenders/reco_paths.json") as jf:
+with open("recommenders/reco_paths.json", 'r', encoding='utf-8') as jf:
     reco_paths = json.load(jf)
 
 

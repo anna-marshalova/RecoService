@@ -1,4 +1,3 @@
-import json
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
@@ -13,7 +12,6 @@ from recommenders.userknn import get_recos_user_knn
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
 from service.log import app_logger
-
 
 
 class RecoResponse(BaseModel):
