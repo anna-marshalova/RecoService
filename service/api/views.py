@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
@@ -5,15 +6,14 @@ from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 
 from recommenders.lightfm import get_offline_recos_lightfm, get_recos_lightfm_ann
-from recommenders.model_loader import load
 from recommenders.model_names import ModelName
 from recommenders.neural_recommenders import get_recos_AE, get_recos_multi_VAE
 from recommenders.popular import get_popular
+from recommenders.userknn import get_recos_user_knn
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
 from service.log import app_logger
 
-userknn_model = load("models/user_knn.pkl")
 
 
 class RecoResponse(BaseModel):
@@ -53,7 +53,7 @@ async def get_reco(
     elif model_name is ModelName.popular:
         reco = get_popular(k_recs)
     elif model_name is ModelName.userknn:
-        reco = userknn_model.recommend(user_id, N_recs=k_recs)
+        reco = get_recos_user_knn(user_id, k_recs=k_recs)
     elif model_name is ModelName.lightfm:
         reco = get_offline_recos_lightfm(user_id)
     elif model_name is ModelName.lightfm_ann:

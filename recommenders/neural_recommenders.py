@@ -4,6 +4,8 @@ from typing import Dict, List
 
 from recommenders.popular import get_popular
 
+with open('recommenders/reco_paths.json') as jf:
+    reco_paths = json.load(jf)
 
 def load_recos(path):
     if os.path.exists(path):
@@ -12,8 +14,8 @@ def load_recos(path):
         return recos
     return {}
 
-AE_recos = load_recos('recommenders/offline/AE_recos.json')
-multi_VAE_recos = load_recos('recommenders/offline/MultiVAE_recos.json')
+AE_recos = load_recos(reco_paths['ae_json'])
+multi_VAE_recos = load_recos(reco_paths['multi_vae_json'])
 
 def get_recos_from_dict(user_id, recos:Dict[str, List[int]], k_recs=10):
     user_id = str(user_id)

@@ -1,0 +1,7 @@
+{   "popular_csv": "recommenders/offline/popular_50.csv",
+    "userknn_model":"models/user_knn.pkl",
+    "lightfm_ann_model": "models/ANN_LightFM_warp_8.pkl",
+    "lightfm_csv": "recommenders/offline/LightFM_warp_8.csv",
+    "ae_json":"recommenders/offline/AE_recos.json",
+    "multi_vae_json":"recommenders/offline/MultiVAE_recos.json"
+}

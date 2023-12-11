@@ -1,3 +1,4 @@
+import json
 import os
 import random
 
@@ -5,6 +6,9 @@ from recommenders.lightfm import get_offline_recos_lightfm, get_recos_lightfm_an
 from recommenders.model_loader import load
 from recommenders.neural_recommenders import get_recos_AE, get_recos_multi_VAE
 from recommenders.popular import get_popular
+
+with open("recommenders/reco_paths.json") as jf:
+    reco_paths = json.load(jf)
 
 
 def test_popular():
@@ -15,10 +19,10 @@ def test_popular():
 
 
 def test_userknn():
-    MODEL_PATH = "models/user_knn.pkl"
+    MODEL_PATH = reco_paths["userknn_model"]
     if os.path.exists(MODEL_PATH):
         userknn_model = load(MODEL_PATH)
-        user_id = 0
+        user_id = random.randint(0, 10**9)
         k_recs = 10
         reco = userknn_model.recommend(user_id, N_recs=k_recs)
         assert isinstance(reco, list)
@@ -28,7 +32,7 @@ def test_userknn():
 
 
 def test_lightfm_ann():
-    MODEL_PATH = "models/ANN_LightFM_warp_8.pkl"
+    MODEL_PATH = reco_paths["lightfm_ann_model"]
     if os.path.exists(MODEL_PATH):
         user_id = random.randint(0, 10**9)
         k_recs = 10
@@ -40,7 +44,7 @@ def test_lightfm_ann():
 
 
 def test_offline_lightfm():
-    RECOS_PATH = "recommenders/offline/LightFM_warp_8.csv"
+    RECOS_PATH = reco_paths["lightfm_csv"]
     if os.path.exists(RECOS_PATH):
         user_id = random.randint(0, 10**9)
         k_recs = 10
