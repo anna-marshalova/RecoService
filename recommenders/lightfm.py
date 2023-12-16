@@ -13,7 +13,6 @@ with open('recommenders/reco_paths.json') as jf:
 
 lightfm_ann = None
 MODEL_PATH = reco_paths['lightfm_ann_model']
-print(MODEL_PATH)
 if os.path.exists(MODEL_PATH):
     lightfm_ann = pickle.load(open(MODEL_PATH, 'rb'))
 
