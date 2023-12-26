@@ -1,22 +1,13 @@
-import os
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request, Security
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 
-from recommenders.model_loader import load
-from recommenders.model_names import ModelName
-from recommenders.popular import get_popular
+from recommenders.recommenders import ModelName, recommender_functions
 from service.api.exceptions import AuthorizationError, ModelNotFoundError, UserNotFoundError
 from service.api.keys import API_KEYS
 from service.log import app_logger
-
-MODEL_PATH = "models/user_knn.pkl"
-if os.path.exists(MODEL_PATH):
-    userknn_model = load(MODEL_PATH)
-else:
-    userknn_model = None
 
 
 class RecoResponse(BaseModel):
@@ -51,12 +42,9 @@ async def get_reco(
 
     if user_id > 10**9:
         raise UserNotFoundError(error_message=f"User {user_id} not found")
-    if model_name is ModelName.range:
-        reco = list(range(k_recs))
-    elif model_name is ModelName.popular:
-        reco = get_popular(k_recs)
-    elif model_name is ModelName.userknn:
-        reco = userknn_model.recommend(user_id, N_recs=k_recs)
+    recommender_function = recommender_functions.get(model_name.value, None)
+    if recommender_function:
+        reco = recommender_function(user_id, k_recs=k_recs)
     else:
         raise ModelNotFoundError(error_message=f"Model {model_name} not found")
 

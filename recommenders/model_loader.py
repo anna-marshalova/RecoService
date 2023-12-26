@@ -9,5 +9,8 @@ class CustomUnpickler(pickle.Unpickler):
         return super().find_class(module, name)
     
 def load(path:str):
-        with open(os.path.join(path), 'rb') as f:
-            return CustomUnpickler(f).load()
+        if os.path.exists(path):
+            with open(os.path.join(path), 'rb') as f:
+                return CustomUnpickler(f).load()
+        else:
+             return None

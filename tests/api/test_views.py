@@ -7,7 +7,7 @@ from service.settings import ServiceConfig
 
 API_KEY = API_KEYS[0]
 GET_RECO_PATH = "/reco/{model_name}/{user_id}"
-MODEL_NAMES = ["range", "popular"]
+MODEL_NAMES = ["popular", "hybrid"]
 
 
 def test_health(
@@ -62,7 +62,7 @@ def test_wrong_api_key(
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    model_name = "range"
+    model_name = "popular"
     path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
     with client:
         response = client.get(path, headers={"Authorization": "a"})
@@ -75,7 +75,7 @@ def test_missing_api_key(
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    model_name = "range"
+    model_name = "popular"
     path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
     with client:
         response = client.get(path)

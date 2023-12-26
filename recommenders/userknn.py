@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 from collections import Counter
 
@@ -7,6 +8,8 @@ import scipy as sp
 from rectools.dataset import Dataset
 from rectools.models import PopularModel
 from implicit.nearest_neighbours import ItemItemRecommender
+
+from recommenders.model_loader import load
 
 
 SIMILARITY_POPULAR = 0.1
@@ -147,3 +150,11 @@ class UserKnn():
         """
         df = pd.DataFrame({"user_id": [user_id], "item_id": [user_id]})
         return self.predict(df, N_recs=N_recs).item_id.to_list()
+
+
+with open("recommenders/reco_paths.json") as jf:
+    reco_paths = json.load(jf)
+userknn_model = load(reco_paths["userknn_model"])
+
+def get_recos_user_knn(user_id, k_recs=10):
+    return userknn_model.recommend(user_id, N_recs=k_recs)

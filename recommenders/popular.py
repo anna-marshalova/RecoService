@@ -1,11 +1,13 @@
 import os
+import json
 
 import pandas as pd
 
 from recommenders.model_loader import load
 
-DATASET_DIR = "kion_train"
-popularity_df = pd.read_csv(os.path.join(DATASET_DIR, "popular_50.csv"))
+with open('recommenders/reco_paths.json') as jf:
+    reco_paths = json.load(jf)
+popularity_df = pd.read_csv(reco_paths['popular_csv'])
 
 
 def get_popular(k_recs: int = 10):
